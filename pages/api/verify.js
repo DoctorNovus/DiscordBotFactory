@@ -6,7 +6,7 @@ export default async (req, res) =>
     let token = JSON.parse(req.body).token;
 
     if (token)
-    {
+    {        
         let user = await Iron.unseal(token, process.env.ENCRYPTION_SECRET, Iron.defaults);
 
         if (user)

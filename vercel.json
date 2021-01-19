@@ -1,7 +1,7 @@
 {
     "functions": {
-        "api/hello.js": {
-            "includeFiles": "_extracted/**"
+        "api/template.js": {
+            "includeFiles": "Templates/**"
         }
     }
 }

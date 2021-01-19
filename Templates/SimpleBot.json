@@ -1,0 +1,43 @@
+{
+    "name": "SimpleBot",
+    "folders": [
+        {
+            "name": "root",
+            "files": [
+                {
+                    "file": "bot.js",
+                    "data": "const Discord = require(\"discord.js\");\\nconst { token } = require(\"./config.json\");\\nconst client = new Discord.Client({ ws: { intents: new Discord.Intents(Discord.Intents.ALL) }, partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });\\nconst requireAll = require('require-all');\\nconst commands = requireAll({\\n    dirname: `${__dirname}/commands`,\\n    filter: /^(?!-)(.+)\\.js$/\\n});\\nclient.commands = new Map();\\nclient.aliases = new Map();\\nfor (const name in commands)\\n{\\n  const cmd = commands[name];\\n  client.commands.set(cmd.config.name, cmd);}\\nfor (const a of cmd.config.aliases) {  client.aliases.set(a, cmd.config.name);\\n  console.log(`Command loaded: ${cmd.config.name}`);\\n}\\nconst events = requireAll({\\n  dirname: `${__dirname}/events`,\\n  filter: /^(?!-)(.+)\\.js$/\\n});\\nclient.removeAllListeners();\\nfor (const name in events)\\n{\\n  const event = events[name]; client.on(name, event.bind(null, client));\\n  console.log(`Event loaded: ${name}`);\\n}\\n\\nclient.login(token);"
+                },
+                {
+                    "file": "config.json",
+                    "data": {
+                        "prefix": "?",
+                        "token": "InsertTokenHere"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "commands",
+            "files": [
+                {
+                    "file": "ping.js",
+                    "data": "module.exports.run = async (client, message, args) =>\\n{\\n  message.channel.send(\"Pong\");\\n};\n\\nmodule.exports.config = {\\n  name: 'ping',\\n  aliases: ['pong']\\n};"
+                }
+            ]
+        },
+        {
+            "name": "events",
+            "files": [
+                {
+                    "file": "ready.js",
+                    "data": "module.exports = (client) =>\\n{\\nconsole.log(`${client.user.username} has logged in.`);\\n}"
+                },
+                {
+                    "file": "message.js",
+                    "data": "module.exports = (client, message) =>\\n{\\nconst { prefix } = require(\"../config.json\");\\nconst [cmd, ...args] = message.content.trim().slice(prefix.length).split(/\\s+/g);\\nconst command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));\\nif (command)\\n{\\ncommand.run(client, message, args);\\nconsole.log(`Executing ${command.config.name} command for ${message.author.tag}.`);\\n}\\n}"
+                }
+            ]
+        }
+    ]
+}

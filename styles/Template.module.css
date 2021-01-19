@@ -1,0 +1,11 @@
+.folders {
+    margin: 0%;
+    padding: 0%;
+    background-color: #252526;
+    color: white;
+}
+
+.templateContainer {
+    display: flex;
+    flex-direction: column;
+}
